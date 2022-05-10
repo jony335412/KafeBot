@@ -39,6 +39,29 @@ class Database:
 """
         self.execute(sql, commit=True)
 
+    def create_product_table(self):
+        sql = """
+        CREATE TABLE Product(
+            id INTEGER PRIMARY KEY,
+            title TEXT UNIQUE NOT NULL,
+            description TEXT,
+            price INTEGER NOT NULL,
+            image TEXT NOT NULL,
+            date DATETIME NOT NULL,
+            cat_id INTEGER NOT NULL
+        );
+        """
+        self.execute(sql, commit=True)
+
+    def create_category_table(self):
+        sql = """
+        CREATE TABLE Category(
+            id INTEGER PRIMARY KEY,
+            title TEXT UNIQUE NOT NULL
+        );
+        """
+        self.execute(sql, commit=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -54,9 +77,33 @@ class Database:
         """
         self.execute(sql, parameters=(id, name, email, language), commit=True)
 
+    def add_category_title(self, title: str):
+        sql = """
+        INSERT INTO Category(title) VALUES(?);
+        """
+        self.execute(sql, parameters=(title, ), commit=True)
+    
+    def add_products(self, title, description, price, image, date, cat_id):
+        sql = """
+        INSERT INTO Product(title, description, price, image, date, cat_id) VALUES(?, ?, ?, ?, ?, ?);
+        """
+        self.execute(sql, parameters=(title, description, price, image, date, cat_id), commit=True)
+
     def select_all_users(self):
         sql = """
         SELECT * FROM Users
+        """
+        return self.execute(sql, fetchall=True)
+
+    def select_all_cats(self):
+        sql = """
+        SELECT * FROM Category
+        """
+        return self.execute(sql, fetchall=True)
+
+    def select_all_prods(self):
+        sql = """
+        SELECT * FROM Product
         """
         return self.execute(sql, fetchall=True)
 
