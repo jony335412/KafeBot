@@ -43,6 +43,12 @@ async def get_all_users(message: types.Message):
     await message.answer("Baza tozalandi!")
 
 
+@dp.message_handler(text="/cleancart", user_id=ADMINS)
+async def get_all_users(message: types.Message):
+    db.delete_cart()
+    await message.answer("Cart bazasi tozalandi!")
+
+
 @dp.message_handler(commands=['category'], user_id=ADMINS)
 async def add_category(message: types.Message):
     await message.answer("Qo'shmoqchi bo'lgan kategoriyangiz nomini kiriting")

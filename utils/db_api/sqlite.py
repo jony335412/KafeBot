@@ -62,6 +62,18 @@ class Database:
         """
         self.execute(sql, commit=True)
 
+    def create_cart_table(self):
+        sql = """
+        CREATE TABLE Cart(
+            id INTEGER PRIMARY KEY,
+            tg_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            price INTEGER NOT NULL,
+            amount INTEGER NOT NULL
+        );
+        """
+        self.execute(sql, commit=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -89,6 +101,20 @@ class Database:
         """
         self.execute(sql, parameters=(title, description, price, image, date, cat_id), commit=True)
 
+
+    def add_product_cart(self, tg_id: int, title: str, price: int, amount: int):
+        sql = "SELECT * FROM Cart WHERE tg_id=? AND title=?"
+        data = self.execute(sql, parameters=(tg_id, title), fetchone=True)
+        if data:
+            sql = "UPDATE Cart SET amount=? where id=?"
+            self.execute(sql, parameters=(int(data[4]) + int(amount), int(data[0])), commit=True)
+        else:
+            sql = """
+            INSERT INTO Cart(tg_id, title, price, amount) VALUES(?, ?, ?, ?);
+            """
+            self.execute(sql, parameters=(tg_id, title, price, amount), commit=True)
+
+
     def select_all_users(self):
         sql = """
         SELECT * FROM Users
@@ -114,6 +140,32 @@ class Database:
 
         return self.execute(sql, parameters=parameters, fetchone=True)
 
+    def get_current_products(self, **kwargs):
+        sql = "SELECT * FROM Cart WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, fetchall=True)
+
+    def delete_current_product(self, **kwargs):
+        sql = "DELETE FROM Cart WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, commit=True)
+
+    def product_by_cat_id(self, **kwargs):
+        sql = "SELECT id FROM Category WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        cat_id = self.execute(sql, parameters=parameters, fetchone=True)
+        return cat_id[0]
+
+    def get_product_cat_id(self, **kwargs):
+        sql = "SELECT title FROM Product WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, fetchall=True)
+
+    def get_product_title_id(self, **kwargs):
+        sql = "SELECT * FROM Product WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 
@@ -128,6 +180,8 @@ class Database:
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
 
+    def delete_cart(self):
+            self.execute("DELETE FROM Cart WHERE TRUE", commit=True)
 
 def logger(statement):
     print(f"""

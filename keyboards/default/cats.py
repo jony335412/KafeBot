@@ -7,3 +7,4 @@ categories = db.select_all_cats()
 
 for cat in categories:
     all_cats.insert(KeyboardButton(text=cat[1]))
+all_cats.add(KeyboardButton(text="Savat"))

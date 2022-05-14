@@ -14,7 +14,8 @@ async def on_startup(dispatcher):
     try:
         # db.create_table_users()
         # db.create_product_table()
-        db.create_category_table()
+        # db.create_category_table()
+        db.create_cart_table()
     except Exception as err:
         print(err)
 
