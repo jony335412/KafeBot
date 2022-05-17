@@ -9,7 +9,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 async def get_cat(message: types.Message, state: FSMContext):
     cat_id = db.product_by_cat_id(title=message.text)
     await state.update_data(
-        {'cat_id': cat_id}
+        {'cat_id': cat_id, 'categoriya': message.text}
     )
     products = db.get_product_cat_id(cat_id=cat_id)
     prod = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, one_time_keyboard=True)

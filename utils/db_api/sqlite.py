@@ -181,7 +181,16 @@ class Database:
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
 
     def delete_cart(self):
-            self.execute("DELETE FROM Cart WHERE TRUE", commit=True)
+        self.execute("DELETE FROM Cart WHERE TRUE", commit=True)
+
+    def clear_cart(self, **kwargs):
+        sql="DELETE FROM Cart WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, commit=True)
+
+    def delete_products(self, tg_id):
+        sql = "DELETE FROM Cart WHERE tg_id=?"
+        return self.execute(sql, (tg_id, ), commit=True)
 
 def logger(statement):
     print(f"""

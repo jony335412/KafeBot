@@ -12,7 +12,7 @@ async def get_prod(message: types.Message, state: FSMContext):
     cat_id = data.get('cat_id')
     info = db.get_product_title_id(title=prod_name, cat_id=cat_id)
     await state.update_data(
-        {'title': str(info[1]), 'price': info[3], 'user_id': message.from_user.id}
+        {'title': str(info[1]), 'price': info[3]}
     )
     await message.answer_photo(photo=info[4], caption=f"<b>{info[1]}</b>\n\nBatafsil: {info[2]}\nNarxi: {info[3]} so'm\n", reply_markup=numbers)
     await Shop.next()
