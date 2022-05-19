@@ -5,6 +5,6 @@ env = Env()
 env.read_env()
 
 # .env fayl ichidan quyidagilarni o'qiymiz
-BOT_TOKEN = env.str("BOT_TOKEN")  # Bot toekn
-ADMINS = env.list("ADMINS")  # adminlar ro'yxati
-PROVIDER_TOKEN = env.str("PROVIDER_TOKEN") # PayMe Token
+BOT_TOKEN = "1954702850:AAFsQB-FOFY0SxaAgn7eAZzmcegeHxogpNI"  # Bot toekn
+ADMINS = [1343692719]  # adminlar ro'yxati
+PROVIDER_TOKEN = "371317599:TEST:1652791094062" # PayMe Token
